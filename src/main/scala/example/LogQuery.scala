@@ -51,8 +51,10 @@ object LogQuery {
   //
   //
   //
-	  val rdd = sc.wholeTextFiles("natus/text/")
-	  val tt = new org.apache.uima.dkpro.spark.PojoTest()
+          val input_path = args(0)
+          val output_path = args(1)
+	  val rdd = sc.wholeTextFiles(input_path, 32)
+	  val tt = new org.apache.uima.dkpro.spark.PojoTest(output_path)
 	  rdd.map(string => tt.analyzeText(string._2, string._1)).collect
   //
   //
