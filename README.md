@@ -44,13 +44,11 @@ How to run (yarn)
 Performances considerations
 ---------------------------
 
-config 1: classic UIMAfit, 1 core
-config 2: spark, 1 slave/6 cores
-
-- test 1 (128 texts)
-	- config 1: 1 min
-	- config 2: 1 min
+1. config 1: classic UIMAfit, 1 core
+1. config 2: classic UIMAfit, 2 cores (parallel run of half dataset)
+1. config 3: spark, 1 slave / 2 cores
 
 - test 2 (256 texts)
 	- config 1: 3 min 20
-	- config 2: 2 min 30
+	- config 2: 2 min 20
+	- config 3: 2 min 20
