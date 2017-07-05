@@ -44,10 +44,13 @@ How to run (yarn)
 Performances considerations
 ---------------------------
 
-- test1 : 5 node spark with hadoop (16 core used), 500 texts
-- 1 minute
+config 1: classic UIMAfit, 1 core
+config 2: spark, 1 slave/6 cores
 
-test2 : 1 node without spark (1 code used), 100 texts
-- 45 secondes
+- test 1 (128 texts)
+	- config 1: 1 min
+	- config 2: 1 min
 
-- Conclusion: Distributing 100 texts on 5 computer would use 45 seconde. It should be possible to run several instances on each. But this would be a complicated process, to log errors, and overhead to distribute calculus. Spark/uima has decent performances while saving time to program and to debug.
+- test 2 (256 texts)
+	- config 1: 3 min 20
+	- config 2: 2 min 30
