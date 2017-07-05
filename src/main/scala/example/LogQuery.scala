@@ -37,19 +37,11 @@ object LogQuery {
     val sparkConf = new SparkConf().setAppName("Uima Note Deid")
     val sc = new SparkContext(sparkConf)
 
-  //
-  // -> WILL BECOME: only one json file containing all texts, included demographics.
-  // -> WILL BECOME: sc.textFile("/home/nps/git/fhir-json/test.json",32).toDF.show(10, truncate = false)
-
           val input_path = args(0)
           val output_path = args(1)
 
-	  val rdd = sc.textFile(input_path)
+	  val rdd = sc.textFile(input_path, 8)
 	  rdd.map(string => tt.analyzeText(string)).collect
-
-  //
-  //
-  //
 
 
     sc.stop()

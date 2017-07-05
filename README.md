@@ -47,10 +47,12 @@ Performances considerations
 1. config 1: classic UIMAfit, 1 core
 1. config 2: classic UIMAfit, 2 cores (parallel run of half dataset)
 1. config 3: spark, 1 slave / 2 cores
+1. config 4: spark, 1 slave / 4 cores
 
 - test 1 (256 texts)
 	- config 1: 3 min 20
 	- config 2: 2 min 20
 	- config 3: 2 min 20
+	- config 4: 1 min 50
 
 Apparently, running separate instances of UIMAfit is equivalent in terms of performances to running them into spark. However, while adding a new layer with spark, this allows to distribute the pipelines over multiple computers, in parallell from one command. It is then possible to scale from one to thouthand of computers easily.
