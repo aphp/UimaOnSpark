@@ -38,7 +38,8 @@ How to run (yarn)
 
 1. push all jars, xml, txt files on one of the computer cluster
 1. push all the txt files on hdfs (=input\_path)
-1. `/usr/hdp/2.5.0.0-1245/spark2/bin/spark-submit --jars NoteDeid-1.0-SNAPSHOT-standalone.jar,uima-an-dictionary.jar --files DictionaryAnnotator.xml,RegExAnnotator.xml,dictionary.xml,dictionary2.xml --master yarn-client --num-executors 8 --driver-memory 512m --executor-memory 512m --executor-cores 4   logquery_2.11-0.1.0-SNAPSHOT.jar $input_path $output_path
+1. `/usr/hdp/2.5.0.0-1245/spark2/bin/spark-submit --jars NoteDeid-1.0-SNAPSHOT-standalone.jar,uima-an-dictionary.jar --files DictionaryAnnotator.xml,RegExAnnotator.xml,dictionary.xml,dictionary2.xml --master yarn-client --num-executors 8 --driver-memory 512m --executor-memory 512m --executor-cores 1   logquery_2.11-0.1.0-SNAPSHOT.jar $input_path $output_path
+1. it is crucial to put only one executor core. It looks like the CAS is shared otherwize, and this leeds job to fail. In the case of 1 core executor, the pipes looks like to be run independently on multiple cores (paradoxaly)
 
 Performances considerations
 ---------------------------
