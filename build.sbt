@@ -11,6 +11,7 @@ lazy val root = (project in file(".")).
     name := "LogQuery",
     libraryDependencies := Seq(  
     scalaTest % Test,
-    "org.apache.spark" % "spark-core_2.10" % "2.1.1"
+    "org.apache.spark" % "spark-core_2.10" % "2.1.1",
+    "org.apache.hadoop" % "hadoop-hdfs" % "2.5.2"
     )
   )
