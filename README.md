@@ -1,7 +1,7 @@
 Run UIMA pipelines over Spark
 ==============================
 
-UIMAfit
+uimaFIT
 -------
 
 Apparently, no problem thanks to simplifiing and removing xml stuff
