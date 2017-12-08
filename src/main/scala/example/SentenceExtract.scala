@@ -19,47 +19,42 @@
 package org.apache.spark.examples
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.broadcast.Broadcast
-import org.apache.uima.dkpro.spark.SectionSegmenterPojo
+import org.apache.spark.sql.SparkSession
+import org.apache.uima.dkpro.spark.SentenceSegmenterPojo
 import java.io._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
 
-import org.apache.avro.mapred.{AvroInputFormat, AvroWrapper}
-import org.apache.avro.generic.GenericRecord
 import org.apache.hadoop.io.NullWritable
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.Row
 /**
  * Executes a roll up-style query against Apache logs.
  *
  * Usage: LogQuery [logFile]
  */
-object SectionSegmenter {
+object SentenceSegmenter {
   //@transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo(Array(1,2,3), Array(2,2,2),Array("section1","section2","section3"));
-  @transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo("ref_doc_section.csv");
+  @transient val tt = new org.apache.uima.dkpro.spark.SentenceSegmenterPojo();
   def main(args: Array[String]) {
     val output_path = args(0)
     val result_path_file = args(1)
-    val avro_path = args(2)
-    val numberPartition = args(3)
+   // val sparkConf = new SparkConf().setAppName("Uima Sentence Segmenter")
+   // val sc = new SparkContext(sparkConf)
+    //val spark = new org.apache.spark.sql.SQLContext(sc)
+    val warehouseLocation = "/user/edsedev/warehouse"
 
-    val sparkConf = new SparkConf().setAppName("Uima Section Segmenter")
-    val sc = new SparkContext(sparkConf)
-    val accum = sc.longAccumulator("My Accumulator")
-    val avroRDD = sc.hadoopFile[AvroWrapper[GenericRecord], NullWritable, AvroInputFormat[GenericRecord]](avro_path, minPartitions=numberPartition.toInt)
-
-    //val br = sc.broadcast(fruit)
-    avroRDD.map(row => {
-    accum.add(1)
-    tt.analyzeText(
-          row._1.datum.get(0).asInstanceOf[Integer]  //pdf id
-        , row._1.datum.get(1).asInstanceOf[Integer]  //pdf type
-        , row._1.datum.get(2).toString  // pdf content
-    )
-    }).saveAsTextFile(output_path)
+     val spark = SparkSession
+      .builder()
+      .appName("UIMA Sentence Extractor")
+      .config("spark.sql.warehouse.dir", warehouseLocation)
+      .enableHiveSupport()
+      .getOrCreate()
+    val df = spark.sql("SELECT lexical_variant FROM edsomop.note_nlp")
+    val rows: RDD[Row] = df.rdd
+    rows.map( row => tt.analyzeText(row.get(0).asInstanceOf[String]) ).saveAsTextFile(output_path)
     val file = result_path_file
     merge(output_path, file)
-    println(accum)
-    sc.stop()
   }
 
   //cf: https://dzone.com/articles/spark-write-csv-file

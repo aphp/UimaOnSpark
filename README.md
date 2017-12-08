@@ -102,4 +102,47 @@ TODO
 ----
 
 - AVRO READER (from sqoop)
+
+
+
+
+Run SectionSegmentation
+=======================
+
+
+RUN
+---
+
+- YARN: `/usr/hdp/2.5.0.0-1245/spark2/bin/spark-submit --jars NoteDeid-1.0-SNAPSHOT-standalone.jar,logquery_2.11-0.1.0-SNAPSHOT.jar --class org.apache.spark.examples.SectionSegmenter --num-executors 16  --executor-cores 1  --master yarn  NoteDeid-1.0-SNAPSHOT-standalone.jar tata/ result.csv`
+
+NEEDS
+-----
+
+- a uima pipeline jar in the lib folder 
+
+INPUT
+-----
+
+- takes an AVRO file
+
+OUTPUT
+-----
+
+- produces a csv file without header
+
+
+HOW
+---
+
+- this runs an UIMA pipeline over all text
+- then, this produces a csv per each partition
+- each csv are merged into one large csv
+- this csv is supposed to be sent to postgresql
+
+
+
+TODO
+----
+
+- AVRO READER (from sqoop)
 - 
