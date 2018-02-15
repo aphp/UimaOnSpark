@@ -28,6 +28,8 @@ import org.apache.hadoop.fs._
 import org.apache.hadoop.io.NullWritable
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Row
+import org.apache.spark.sql.functions._
+
 /**
  * Executes a roll up-style query against Apache logs.
  *
@@ -36,25 +38,33 @@ import org.apache.spark.sql.Row
 object SentenceSegmenter {
   //@transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo(Array(1,2,3), Array(2,2,2),Array("section1","section2","section3"));
   @transient val tt = new org.apache.uima.dkpro.spark.SentenceSegmenterPojo();
+
+  case class Text(text:String)
+
   def main(args: Array[String]) {
     val output_path = args(0)
     val result_path_file = args(1)
-   // val sparkConf = new SparkConf().setAppName("Uima Sentence Segmenter")
-   // val sc = new SparkContext(sparkConf)
-    //val spark = new org.apache.spark.sql.SQLContext(sc)
-    val warehouseLocation = "/user/edsedev/warehouse"
-
-     val spark = SparkSession
+    val partitionNum = args(2).toInt
+    val warehouseLocation = "/user/edsprod/warehouse"
+    val spark = SparkSession
       .builder()
       .appName("UIMA Sentence Extractor")
       .config("spark.sql.warehouse.dir", warehouseLocation)
       .enableHiveSupport()
       .getOrCreate()
-    val df = spark.sql("SELECT lexical_variant FROM edsomop.note_nlp")
-    val rows: RDD[Row] = df.rdd
-    rows.map( row => tt.analyzeText(row.get(0).asInstanceOf[String]) ).saveAsTextFile(output_path)
-    val file = result_path_file
-    merge(output_path, file)
+
+      import spark.implicits._
+    val df = spark.sql(" SELECT text FROM  edsprod.doc_tr WHERE text is not null")
+    .select(col("text").alias("text").as[String])
+    .as[Text]
+    .repartition(partitionNum)
+    .select(col("text").alias("text").as[String]).as[Text]
+    //.mapPartitions(iter => {iter.map(x => if(x==null) null else tt.analyzeText(x.text).asInstanceOf[String])})
+    .map(x => tt.analyzeText(x.text).asInstanceOf[String])
+    .rdd
+    .saveAsTextFile(output_path)
+
+    merge(output_path, result_path_file)
   }
 
   //cf: https://dzone.com/articles/spark-write-csv-file
