@@ -1,3 +1,51 @@
+# MimicSectionSegmenter
+
+
+## Run on the segmenter
+
+- NOTE: spark only works on linux/MacosX
+
+1. download spark 2.2 or higher, and unpack it in `<spark_folder>`
+1. clone and compile the uima-root library
+1. clone this project
+1. put the `uima-root/uima-segmenter/target/uima-segmenter-1.0-standalone.jar`[1] under the `UimaOnSpark/lib/` folder
+1. compile this project with `sbt publish-local` 
+1. copy the `target/scala-2.11/uimaonspark_2.11-0.1.0-SNAPSHOT.jar`[2] 
+1. copy `NOTEEVENTS.csv.gz`, `ref_doc_section.csv`, [1] and [2] into a `<working_folder>`
+1. run the spark command
+1. the resulting csv will be in t
+
+## Spark Command
+
+### Standalone
+
+- The two steps below run a spark environment with 4 executors. 
+- The csv is split into 200 tasks that will be consumed by the 4 executors.
+- The /tmp/ directory will be used as a temporary folder to get the 200 results.
+- The results will be concatened into the note_nlp.csv file into the working folder
+
+```
+<spark_folder>/sbin/start-master.sh
+<spark_folder>/sbin/start-slave.sh  spark://nps-HP-ProBook-430-G2:7077 -c 4
+```
+
+```
+<spark_folder>/bin/spark-submit \
+--class fr.aphp.wind.uima.spark.MimicSectionSegmenter \
+--jars uima-segmenter-1.0-SNAPSHOT-standalone.jar,uimaonspark_2.11-0.1.0-SNAPSHOT.jar \
+--files ref_doc_section.csv \
+--master spark://0.0.0.0:7077 \
+--executor-cores 1 \
+uimaonspark_2.11-0.1.0-SNAPSHOT.jar \
+/tmp/ \
+note_nlp.csv \
+NOTEEVENTS.csv.gz \
+200
+```
+
+
+# NotePhiAnnotator
+
 Run UIMA pipelines over Spark
 ==============================
 

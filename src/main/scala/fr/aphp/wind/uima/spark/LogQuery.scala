@@ -16,7 +16,7 @@
  */
 
 // scalastyle:off println
-package org.apache.spark.examples
+package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.uima.dkpro.spark.PojoTest

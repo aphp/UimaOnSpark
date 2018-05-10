@@ -16,55 +16,57 @@
  */
 
 // scalastyle:off println
-package org.apache.spark.examples
+package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.sql.SparkSession
-import org.apache.uima.dkpro.spark.SentenceSegmenterPojo
+import org.apache.spark.sql.{SparkSession, DataFrame, SaveMode, SQLContext}
+import org.apache.uima.dkpro.spark.SectionSegmenterPojo
 import java.io._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
 
+import org.apache.avro.mapred.{AvroInputFormat, AvroWrapper}
+import org.apache.avro.generic.GenericRecord
 import org.apache.hadoop.io.NullWritable
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.Row
-import org.apache.spark.sql.functions._
 
-/**
- * Executes a roll up-style query against Apache logs.
- *
- * Usage: LogQuery [logFile]
- */
-object SentenceSegmenter {
-  //@transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo(Array(1,2,3), Array(2,2,2),Array("section1","section2","section3"));
-  @transient val tt = new org.apache.uima.dkpro.spark.SentenceSegmenterPojo();
-
-  case class Text(text:String)
-
+object MimicSectionSegmenter {
+  @transient val tt = new fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo("ref_doc_section.csv");
   def main(args: Array[String]) {
     val output_path = args(0)
     val result_path_file = args(1)
-    val partitionNum = args(2).toInt
-    val warehouseLocation = "/user/edsprod/warehouse"
+    val noteFilePath = args(2)
+    val numberPartition = args(3).toInt
+
     val spark = SparkSession
       .builder()
-      .appName("UIMA Sentence Extractor")
-      .config("spark.sql.warehouse.dir", warehouseLocation)
-      .enableHiveSupport()
+      .appName("UIMA Section Extractor")
       .getOrCreate()
 
-      import spark.implicits._
-    val df = spark.sql(" SELECT text FROM  edsprod.doc_tr WHERE text is not null")
-    .select(col("text").alias("text").as[String])
-    .as[Text]
-    .repartition(partitionNum)
-    .select(col("text").alias("text").as[String]).as[Text]
-    //.mapPartitions(iter => {iter.map(x => if(x==null) null else tt.analyzeText(x.text).asInstanceOf[String])})
-    .map(x => tt.analyzeText(x.text).asInstanceOf[String])
-    .rdd
-    .saveAsTextFile(output_path)
+    import spark.implicits._
+    val noteDS = spark.read
+      .option("wholeFile", true)
+      .option("multiline",true)
+      .option("header", true)
+      .option("quote", "\"")
+      .option("escape", "\"")
+      .option("inferSchema", "true")
+      .option("dateFormat", "yyyy-MM-dd")
+      .option("timestampFormat", "yyyy-MM-dd HH:mm:ss")
+      .csv(noteFilePath)
+      .select('ROW_ID.as[Int],'TEXT.as[String])
+      .repartition(numberPartition)
 
-    merge(output_path, result_path_file)
+    noteDS
+      .map(row => {
+           tt.analyzeText(
+             row._1  // row_id
+           , 1  // category always 1 in this context
+           , row._2  // text
+      )
+    }).write.mode(SaveMode.Overwrite).text(output_path)
+
+    val file = result_path_file
+    merge(output_path, file)
   }
 
   //cf: https://dzone.com/articles/spark-write-csv-file
