@@ -6,7 +6,7 @@
 - NOTE: spark only works on linux/MacosX
 
 1. download spark 2.2 or higher, and unpack it in `<spark_folder>`
-1. clone and compile the uima-root library
+1. clone and compile the [uima-aphp project](https://github.com/EDS-APHP/uima-aphp)
 1. clone this project
 1. put the `uima-root/uima-segmenter/target/uima-segmenter-1.0-standalone.jar`[1] under the `UimaOnSpark/lib/` folder
 1. compile this project with `sbt publish-local` 
