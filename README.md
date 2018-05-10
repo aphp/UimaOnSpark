@@ -49,7 +49,7 @@ NOTEEVENTS.csv.gz \
 Run UIMA pipelines over Spark
 ==============================
 
-UIMAfit
+uimaFIT
 -------
 
 Apparently, no problem thanks to simplifiing and removing xml stuff
@@ -57,7 +57,7 @@ Apparently, no problem thanks to simplifiing and removing xml stuff
 UIMA
 ----
 
-When loading an existing pipe from xml descriptor into UIMAfit pipeline keep in mind:
+When loading an existing pipe from xml descriptor into uimaFIT pipeline keep in mind:
 
 - put them on the spark folder
 - the initialize Analysis Engine (the one providing the empty CAS) needs to be
@@ -67,7 +67,7 @@ When loading an existing pipe from xml descriptor into UIMAfit pipeline keep in 
 General Notes
 -------------
 
-- the UIMAfit pipeline needs to be packaged as jar (accordingly to documentation)
+- the uimaFIT pipeline needs to be packaged as jar (accordingly to documentation)
 - the resulting jar needs to be put in the spark folder `jar`
 - the `resources/uima-an-dictionary.jar` need to be in the `jar` folder too
 - all the resources (xml...) needs to be passed to slaves (--files ) but it cannot build folder. For this reason all of them are in the base folder of the UIMA project, and spark folder
@@ -76,8 +76,8 @@ General Notes
 Performances considerations
 ---------------------------
 
-1. config 1: classic UIMAfit, 1 core
-1. config 2: classic UIMAfit, 2 cores (parallel run of half dataset)
+1. config 1: classic uimaFIT, 1 core
+1. config 2: classic uimaFIT, 2 cores (parallel run of half dataset)
 1. config 3: spark, 1 slave / 2 cores
 1. config 4: spark, 1 slave / 4 cores
 
@@ -87,7 +87,7 @@ Performances considerations
 	- config 3: 2 min 20
 	- config 4: 1 min 50
 
-Apparently, running separate instances of UIMAfit is equivalent in terms of performances to running them into spark. However, while adding a new layer with spark, this allows to distribute the pipelines over multiple computers, in parallell from one command. It is then possible to scale from one to thouthand of computers easily.
+Apparently, running separate instances of uimaFIT is equivalent in terms of performances to running them into spark. However, while adding a new layer with spark, this allows to distribute the pipelines over multiple computers, in parallell from one command. It is then possible to scale from one to thouthand of computers easily.
 
 NoteDeid
 ========
