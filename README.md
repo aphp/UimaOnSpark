@@ -15,7 +15,7 @@
 1. run the spark command
 1. the resulting csv will be in t
 
-## Spark Command
+## Spark Command
 
 ### Standalone
 
@@ -26,7 +26,7 @@
 
 ```
 <spark_folder>/sbin/start-master.sh
-<spark_folder>/sbin/start-slave.sh  spark://nps-HP-ProBook-430-G2:7077 -c 4
+<spark_folder>/sbin/start-slave.sh  spark://0.0.0.0:7077 -c 4
 ```
 
 ```
@@ -43,6 +43,9 @@ NOTEEVENTS.csv.gz \
 200
 ```
 
+Below are outdated information
+
+------------------------
 
 # NotePhiAnnotator
 
