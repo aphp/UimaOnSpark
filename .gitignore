@@ -19,6 +19,7 @@ project/plugins/project/
 ### Scala ###
 *.class
 *.log
+*.jar
 
 # End of https://www.gitignore.io/api/sbt,scala
 
