@@ -20,7 +20,7 @@ package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SparkSession
-import org.apache.uima.dkpro.spark.SentenceSegmenterPojo
+import fr.aphp.wind.uima.segmenter.pojo.SentenceSegmenterPojo
 import java.io._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
@@ -37,7 +37,7 @@ import org.apache.spark.sql.functions._
  */
 object SentenceSegmenter {
   //@transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo(Array(1,2,3), Array(2,2,2),Array("section1","section2","section3"));
-  @transient val tt = new org.apache.uima.dkpro.spark.SentenceSegmenterPojo();
+  @transient val tt = new fr.aphp.wind.uima.segmenter.pojo.SentenceSegmenterPojo();
 
   case class Text(text:String)
 

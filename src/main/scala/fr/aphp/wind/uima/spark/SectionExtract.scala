@@ -20,7 +20,7 @@ package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.broadcast.Broadcast
-import org.apache.uima.dkpro.spark.SectionSegmenterPojo
+import fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo
 import java.io._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
@@ -35,7 +35,7 @@ import org.apache.hadoop.io.NullWritable
  */
 object SectionSegmenter {
   //@transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo(Array(1,2,3), Array(2,2,2),Array("section1","section2","section3"));
-  @transient val tt = new org.apache.uima.dkpro.spark.SectionSegmenterPojo("ref_doc_section.csv");
+  @transient val tt = new fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo("ref_doc_section.csv");
   def main(args: Array[String]) {
     val output_path = args(0)
     val result_path_file = args(1)

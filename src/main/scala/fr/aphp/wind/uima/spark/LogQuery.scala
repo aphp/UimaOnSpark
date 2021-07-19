@@ -19,7 +19,7 @@
 package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.uima.dkpro.spark.PojoTest
+import fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo
 /**
  * Executes a roll up-style query against Apache logs.
  *
@@ -28,7 +28,7 @@ import org.apache.uima.dkpro.spark.PojoTest
 object LogQuery {
 
 	  @transient 
-	  val tt = new org.apache.uima.dkpro.spark.PojoTest("/tmp/")
+	  val tt = new fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo("/tmp/")
 
   def main(args: Array[String]) {
 
@@ -41,7 +41,7 @@ object LogQuery {
           val output_path = args(1)
 
 	  val rdd = sc.textFile(input_path, 8)
-	  rdd.map(string => tt.analyzeText(string)).collect
+	  rdd.map(string => tt.analyzeText(1234, 100009, string)).collect
 
 
     sc.stop()

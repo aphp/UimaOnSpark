@@ -20,7 +20,7 @@ package fr.aphp.wind.uima.spark
 
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{SparkSession, DataFrame, SaveMode, SQLContext}
-import org.apache.uima.dkpro.spark.SectionSegmenterPojo
+import fr.aphp.wind.uima.segmenter.pojo.SectionSegmenterPojo
 import java.io._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs._
